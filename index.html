@@ -120,13 +120,122 @@ footer{padding:80px 0;text-align:center;border-top:1px solid rgba(255,255,255,.0
 .fl2{font-family:'Bebas Neue',sans-serif;font-size:32px;letter-spacing:4px;color:var(--yellow);margin-bottom:16px}
 @keyframes fu{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(255,194,15,.08)}50%{box-shadow:0 0 40px rgba(255,194,15,.18),0 0 80px rgba(255,194,15,.06)}}
+@keyframes scanline{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+@keyframes borderGlow{0%,100%{border-color:rgba(255,194,15,.1)}50%{border-color:rgba(255,194,15,.35)}}
+@keyframes countUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cursorPulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.6}50%{transform:translate(-50%,-50%) scale(1.5);opacity:.2}}
+@keyframes particleDrift{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}90%{opacity:.3}100%{transform:translateY(-100vh) translateX(var(--dx));opacity:0}}
+@keyframes revealLine{from{scaleX:0}to{scaleX:1}}
+@keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+
 .y{color:var(--yellow)}
 .mt32{margin-top:32px}
 .mt48{margin-top:48px}
-@media(max-width:900px){.g2,.g3,.ssg,.rg,.tsc{grid-template-columns:1fr}.hm{flex-direction:column}.hmi{border-radius:0!important;border-left:1px solid var(--g2)!important}.cont{padding:0 24px}.hero{padding:100px 24px 64px}.ht{font-size:64px}}
+
+/* ── CURSOR CUSTOMIZADO ── */
+*{cursor:none!important}
+#cursor-dot{position:fixed;width:6px;height:6px;background:var(--yellow);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .2s,height .2s,background .2s;mix-blend-mode:difference}
+#cursor-ring{position:fixed;width:36px;height:36px;border:1px solid rgba(255,194,15,.5);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform .12s cubic-bezier(.23,1,.32,1),width .3s,height .3s,border-color .3s,opacity .3s;will-change:transform}
+#cursor-ring.hover{width:56px;height:56px;border-color:rgba(255,194,15,.9);background:rgba(255,194,15,.04)}
+#cursor-ring.click{width:28px;height:28px;background:rgba(255,194,15,.15)}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(40px);transition:opacity .8s cubic-bezier(.23,1,.32,1),transform .8s cubic-bezier(.23,1,.32,1)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(.96);transition:opacity .7s cubic-bezier(.23,1,.32,1),transform .7s cubic-bezier(.23,1,.32,1)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+.stagger-1{transition-delay:.1s}.stagger-2{transition-delay:.2s}.stagger-3{transition-delay:.3s}.stagger-4{transition-delay:.4s}.stagger-5{transition-delay:.5s}.stagger-6{transition-delay:.6s}
+
+/* ── HERO PREMIUM ── */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:flex-end;padding:100px 64px 88px;position:relative;overflow:hidden}
+.hbg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 60% at 75% 20%,rgba(255,194,15,.08) 0%,transparent 65%),radial-gradient(ellipse 40% 50% at 15% 85%,rgba(255,194,15,.05) 0%,transparent 60%)}
+.hgrid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,194,15,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,194,15,.04) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(to bottom,transparent 5%,rgba(0,0,0,.3) 30%,rgba(0,0,0,.3) 70%,transparent)}
+.hnum{position:absolute;right:40px;bottom:60px;font-family:'Bebas Neue',sans-serif;font-size:320px;line-height:1;color:rgba(255,194,15,.03);user-select:none;letter-spacing:-10px;z-index:1}
+#particles-canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+.hero-scanline{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.hero-scanline::after{content:'';position:absolute;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(255,194,15,.06),transparent);animation:scanline 8s linear infinite}
+.hc{position:relative;z-index:2}
+
+/* ── SEÇÃO TRANSIÇÕES ── */
+section{padding:120px 0;border-top:1px solid rgba(255,255,255,.04);position:relative}
+section::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:1px;height:60px;background:linear-gradient(to bottom,rgba(255,194,15,.3),transparent);pointer-events:none}
+
+/* ── CARDS GLOW ── */
+.card{background:var(--g1);border:1px solid var(--g2);border-radius:var(--r);padding:32px;transition:border-color .4s,transform .3s,box-shadow .4s}
+.card:hover{border-color:rgba(255,194,15,.3);transform:translateY(-4px);box-shadow:0 8px 40px rgba(255,194,15,.08),0 0 0 1px rgba(255,194,15,.06)}
+.card::after{content:'';position:absolute;inset:0;border-radius:var(--r);background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,194,15,.04),transparent 60%);opacity:0;transition:opacity .3s;pointer-events:none}
+.card{position:relative}
+.card:hover::after{opacity:1}
+
+/* ── INSIGHT CARDS GLOW ── */
+.ins{background:var(--g1);border:1px solid var(--g2);border-left:3px solid var(--yellow);border-radius:0 var(--r) var(--r) 0;padding:22px 26px;margin-bottom:16px;transition:border-color .3s,box-shadow .3s,transform .3s}
+.ins:hover{border-color:rgba(255,194,15,.4);box-shadow:0 4px 24px rgba(255,194,15,.07),inset 0 0 20px rgba(255,194,15,.02);transform:translateX(4px)}
+
+/* ── QUOTE PREMIUM ── */
+.quote{border-left:3px solid var(--yellow);padding:24px 32px;background:rgba(255,194,15,.04);border-radius:0 var(--r) var(--r) 0;margin:40px 0;font-size:18px;line-height:1.75;color:var(--text);font-weight:300;font-style:italic;position:relative;transition:background .3s,box-shadow .3s}
+.quote::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--yellow),rgba(255,194,15,.3));box-shadow:0 0 12px rgba(255,194,15,.4)}
+.quote:hover{background:rgba(255,194,15,.06);box-shadow:0 0 40px rgba(255,194,15,.05)}
+
+/* ── HBOX GLOW ── */
+.hbox{background:rgba(255,194,15,.05);border:1px solid rgba(255,194,15,.15);border-radius:var(--r);padding:28px 32px;margin:32px 0;transition:box-shadow .4s,border-color .4s}
+.hbox:hover{border-color:rgba(255,194,15,.3);box-shadow:0 0 40px rgba(255,194,15,.08),inset 0 0 30px rgba(255,194,15,.03)}
+
+/* ── RESULTADO CARDS ── */
+.rc{background:var(--g1);border:1px solid var(--g2);border-radius:var(--r);padding:32px;text-align:center;position:relative;overflow:hidden;transition:border-color .4s,box-shadow .4s,transform .3s}
+.rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,var(--yellow),transparent);box-shadow:0 0 10px rgba(255,194,15,.5)}
+.rc:hover{border-color:rgba(255,194,15,.25);box-shadow:0 0 40px rgba(255,194,15,.07);transform:translateY(-3px)}
+.rb{font-family:'Bebas Neue',sans-serif;font-size:72px;color:var(--yellow);line-height:1;margin-bottom:8px;text-shadow:0 0 30px rgba(255,194,15,.3)}
+
+/* ── NAV ATIVA ── */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;padding:18px 64px;display:flex;justify-content:space-between;align-items:center;background:rgba(17,17,17,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(255,194,15,.1);transition:box-shadow .4s}
+nav.scrolled{box-shadow:0 4px 40px rgba(0,0,0,.6),0 1px 0 rgba(255,194,15,.12)}
+.nav-links a{color:var(--g5);text-decoration:none;font-size:11px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--yellow);transform:scaleX(0);transition:transform .3s cubic-bezier(.23,1,.32,1)}
+.nav-links a:hover::after,.nav-links a.active::after{transform:scaleX(1)}
+.nav-links a:hover,.nav-links a.active{color:var(--yellow)}
+
+/* ── PROGRESS BAR ── */
+#progress-bar{position:fixed;top:0;left:0;height:2px;background:linear-gradient(to right,var(--yellow),rgba(255,194,15,.4));z-index:300;transition:width .1s linear;box-shadow:0 0 8px rgba(255,194,15,.5)}
+
+/* ── SECTION NUMBER GLOW ── */
+.sn{font-family:'DM Mono',monospace;font-size:11px;color:var(--yellow);letter-spacing:2px;padding-top:8px;text-align:right;text-shadow:0 0 20px rgba(255,194,15,.4)}
+
+/* ── TIMELINE DOTS ── */
+.tld{position:absolute;left:-32px;top:4px;width:10px;height:10px;border-radius:50%;background:var(--yellow);box-shadow:0 0 12px rgba(255,194,15,.6),0 0 24px rgba(255,194,15,.3)}
+
+/* ── FOOTER CTA GLOW ── */
+footer a[href*="instagram"]{position:relative;overflow:hidden}
+footer a[href*="instagram"]::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.15),transparent);opacity:0;transition:opacity .3s}
+footer a[href*="instagram"]:hover::after{opacity:1}
+footer a[href*="wa.me"]:hover{border-color:rgba(255,194,15,.6);box-shadow:0 0 20px rgba(255,194,15,.12)}
+
+/* ── CHIP HOVER ── */
+.chip{font-size:13px;padding:8px 16px;border-radius:40px;border:1px solid var(--g3);color:var(--g5);background:var(--g1);transition:border-color .2s,color .2s,box-shadow .2s}
+.chip:hover{border-color:rgba(255,194,15,.3);color:var(--text);box-shadow:0 0 12px rgba(255,194,15,.06)}
+.chip.hot{border-color:rgba(255,100,100,.4);color:#ff8080;background:rgba(255,100,100,.05)}
+.chip.warn{border-color:rgba(255,194,15,.4);color:var(--yellow);background:rgba(255,194,15,.06)}
+
+/* ── FLOW STEPS ── */
+.fs{background:var(--g1);border:1px solid var(--g2);border-radius:var(--r);padding:14px 20px;text-align:center;flex:1;min-width:110px;transition:border-color .3s,box-shadow .3s,transform .2s}
+.fs:hover{border-color:rgba(255,194,15,.3);box-shadow:0 0 20px rgba(255,194,15,.07);transform:translateY(-2px)}
+
+/* ── TABLE HOVER ── */
+.dt tr{transition:background .2s}
+.dt tr:hover td{background:rgba(255,194,15,.03)!important}
+
+@media(max-width:900px){.g2,.g3,.ssg,.rg,.tsc{grid-template-columns:1fr}.hm{flex-direction:column}.hmi{border-radius:0!important;border-left:1px solid var(--g2)!important}.cont{padding:0 24px}.hero{padding:100px 24px 64px}.ht{font-size:64px}#cursor-dot,#cursor-ring{display:none}*{cursor:auto!important}}
 </style>
 </head>
 <body>
+
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="progress-bar"></div>
 
 <nav>
   <a class="nav-logo" href="#">WPM · CASE</a>
@@ -143,6 +252,8 @@ footer{padding:80px 0;text-align:center;border-top:1px solid rgba(255,255,255,.0
 
 <!-- HERO -->
 <section class="hero">
+  <canvas id="particles-canvas"></canvas>
+  <div class="hero-scanline"></div>
   <div class="hbg"></div>
   <div class="hgrid"></div>
   <div class="hnum">v33</div>
@@ -887,5 +998,207 @@ footer{padding:80px 0;text-align:center;border-top:1px solid rgba(255,255,255,.0
   </div>
 </footer>
 
+<script>
+// ── CURSOR CUSTOMIZADO ──
+const dot = document.getElementById('cursor-dot');
+const ring = document.getElementById('cursor-ring');
+let mx = 0, my = 0, rx = 0, ry = 0;
+
+document.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  dot.style.left = mx + 'px';
+  dot.style.top = my + 'px';
+});
+
+function animRing() {
+  rx += (mx - rx) * 0.12;
+  ry += (my - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top = ry + 'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+document.querySelectorAll('a,button,.card,.ins,.hbox,.rc,.fs,.chip,.tc').forEach(el => {
+  el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+  el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+});
+
+document.addEventListener('mousedown', () => ring.classList.add('click'));
+document.addEventListener('mouseup', () => ring.classList.remove('click'));
+
+// ── PROGRESS BAR ──
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100;
+  bar.style.width = Math.min(pct, 100) + '%';
+});
+
+// ── NAV SCROLL ──
+const nav = document.querySelector('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// ── NAV ACTIVE ──
+const sections = document.querySelectorAll('section[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+
+// ── SCROLL REVEAL ──
+const reveals = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+const revObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(r => revObs.observe(r));
+
+// ── CONTADORES ANIMADOS ──
+function animateCount(el, target, duration = 1800) {
+  const isNum = !isNaN(parseInt(target));
+  if (!isNum) { el.textContent = target; return; }
+  const end = parseInt(target);
+  const suffix = target.replace(/[0-9]/g,'');
+  let start = 0, startTime = null;
+  function step(ts) {
+    if (!startTime) startTime = ts;
+    const progress = Math.min((ts - startTime) / duration, 1);
+    const ease = 1 - Math.pow(1 - progress, 4);
+    el.textContent = Math.round(ease * end) + suffix;
+    if (progress < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+}
+
+const countObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const rb = e.target.querySelector('.rb');
+      if (rb && !rb.dataset.counted) {
+        rb.dataset.counted = '1';
+        animateCount(rb, rb.textContent.trim());
+      }
+      countObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.5 });
+document.querySelectorAll('.rc').forEach(rc => countObs.observe(rc));
+
+// ── CARD MOUSE GLOW ──
+document.querySelectorAll('.card').forEach(card => {
+  card.addEventListener('mousemove', e => {
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+    card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+  });
+});
+
+// ── PARTÍCULAS NO HERO ──
+const canvas = document.getElementById('particles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width,
+    y: canvas.height + 10,
+    size: Math.random() * 1.5 + 0.3,
+    speedY: Math.random() * 0.6 + 0.2,
+    speedX: (Math.random() - 0.5) * 0.3,
+    opacity: 0,
+    maxOpacity: Math.random() * 0.4 + 0.1,
+    life: 0,
+    maxLife: Math.random() * 300 + 200
+  };
+}
+
+for (let i = 0; i < 40; i++) {
+  const p = createParticle();
+  p.y = Math.random() * canvas.height;
+  p.life = Math.random() * p.maxLife;
+  particles.push(p);
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach((p, i) => {
+    p.life++;
+    p.y -= p.speedY;
+    p.x += p.speedX;
+    const progress = p.life / p.maxLife;
+    p.opacity = progress < 0.2 ? progress / 0.2 * p.maxOpacity
+              : progress > 0.8 ? (1 - progress) / 0.2 * p.maxOpacity
+              : p.maxOpacity;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255,194,15,${p.opacity})`;
+    ctx.fill();
+    if (p.life >= p.maxLife) particles[i] = createParticle();
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// ── REVEAL EM ELEMENTOS CHAVE ──
+document.querySelectorAll('.sh').forEach((el, i) => el.classList.add('reveal'));
+document.querySelectorAll('.card').forEach((el, i) => {
+  el.classList.add('reveal');
+  if (i % 3 === 1) el.classList.add('stagger-2');
+  if (i % 3 === 2) el.classList.add('stagger-3');
+});
+document.querySelectorAll('.ins').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.classList.add('stagger-' + Math.min(i + 1, 6));
+});
+document.querySelectorAll('.rc').forEach((el, i) => {
+  el.classList.add('reveal-scale');
+  el.classList.add('stagger-' + Math.min(i + 1, 6));
+});
+document.querySelectorAll('.hbox').forEach(el => el.classList.add('reveal'));
+document.querySelectorAll('.quote').forEach(el => el.classList.add('reveal-left'));
+document.querySelectorAll('.tli').forEach((el, i) => {
+  el.classList.add('reveal-left');
+  el.classList.add('stagger-' + Math.min(i + 1, 6));
+});
+document.querySelectorAll('.ll li').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.classList.add('stagger-' + Math.min(i + 1, 6));
+});
+document.querySelectorAll('.fs').forEach((el, i) => {
+  el.classList.add('reveal');
+  el.classList.add('stagger-' + Math.min(i + 1, 6));
+});
+document.querySelectorAll('.rn').forEach(el => el.classList.add('reveal'));
+document.querySelectorAll('h4').forEach(el => el.classList.add('reveal'));
+document.querySelectorAll('.tc').forEach((el, i) => {
+  el.classList.add('reveal-scale');
+  el.classList.add('stagger-' + Math.min(i + 1, 3));
+});
+
+// Re-observar os novos elementos com classe reveal
+document.querySelectorAll('.reveal:not(.visible), .reveal-left:not(.visible), .reveal-right:not(.visible), .reveal-scale:not(.visible)').forEach(r => {
+  revObs.observe(r);
+});
+</script>
 </body>
 </html>
